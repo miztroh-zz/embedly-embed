@@ -1,0 +1,28 @@
+{
+  "name": "embedly-embed",
+  "version": "0.0.1",
+  "authors": [
+    "miztroh <miztroh@gmail.com>"
+  ],
+  "description": "A Polymer custom element that utilizes the Embedly API to embed content.",
+  "main": "embedly-embed.html",
+  "keywords": [
+    "polymer",
+    "embed",
+    "embedly",
+    "web-components"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/miztroh/embedly-embed",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "core-ajax": "Polymer/core-ajax#latest",
+    "core-image": "Polymer/core-image#latest"
+  }
+}

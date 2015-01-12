@@ -1,0 +1,79 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<!--
+A Polymer custom element that utilizes the Embedly API to embed content.
+
+@element embedly-embed
+@homepage https://github.com/miztroh/embedly-embed
+-->
+<link rel="import" href="/bower_components/core-ajax/core-ajax.html">
+<link rel="import" href="/bower_components/core-image/core-image.html">
+<polymer-element name="embedly-embed">
+  <template>
+    <style>
+      :host {
+        display: table;
+      }
+
+      :host #embed {
+        display: inline-block;
+      }
+    </style>
+    <core-ajax id="ajax" url="//api.embed.ly/1/oembed" handleAs="json" params='{"key":"{{key}}","url":"{{url}}"}' auto on-core-response="{{ajaxResponse}}"></core-ajax>
+    <div id="embed"></div>
+  </template>
+  <script>
+    Polymer(
+      {
+        ajaxResponse: function (event, detail, sender) {
+          var embed = detail.response;
+          this.$.embed.innerHTML = '';
+
+          switch (embed.type) {
+            case 'video':
+            case 'rich':
+              this.$.embed.innerHTML = embed.html;
+              break;
+            case 'photo':
+              var core_image = document.createElement('core-image');
+              this.$.embed.appendChild(core_image);
+              core_image.src = embed.url;
+              break;
+            case 'link':
+              var a = document.createElement('a');
+              a.href = embed.url;
+              a.textContent = embed.title || embed.description || embed.url;
+              this.$.embed.appendChild(a);
+              break;
+            case 'error':
+              console.error('embedly-embed', {url: embed.url, error_message: embed.error_message, error_code: embed.error_code});
+              break;
+          }
+        },
+        publish: {
+  				/**
+          * Embedly API key.
+          *
+          * @property key
+          * @type String
+          * @default ''
+          */
+          key: {
+            value: '',
+            reflect: true
+          },
+  				/**
+          * URL of content to embed.
+          *
+          * @property url
+          * @type String
+          * @default ''
+          */
+          url: {
+            value: '',
+            reflect: true
+          }
+        }
+      }
+    );
+  </script>
+</polymer-element>f
