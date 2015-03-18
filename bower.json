@@ -1,6 +1,6 @@
 {
   "name": "embedly-embed",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "authors": [
     "miztroh <miztroh@gmail.com>"
   ],
@@ -22,6 +22,8 @@
     "tests"
   ],
   "dependencies": {
-    "core-ajax": "Polymer/core-ajax#latest"
+    "polymer": "polymer/polymer#^0.5.5",
+    "core-ajax": "Polymer/core-ajax#^0.5.5",
+    "paper-spinner": "Polymer/paper-spinner#^0.5.5"
   }
 }

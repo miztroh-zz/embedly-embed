@@ -6,6 +6,7 @@ A Polymer custom element that utilizes the Embedly API to embed content.
 @homepage https://github.com/miztroh/embedly-embed
 -->
 <link rel="import" href="/bower_components/core-ajax/core-ajax.html">
+<link rel="import" href="/bower_components/paper-spinner/paper-spinner.html">
 <polymer-element name="embedly-embed">
   <template>
     <style>
@@ -22,6 +23,9 @@ A Polymer custom element that utilizes the Embedly API to embed content.
       }
     </style>
     <core-ajax id="ajax" url="//api.embed.ly/1/oembed" handleAs="json" params='{"key":"{{key}}","url":"{{url}}"}' auto on-core-response="{{ajaxResponse}}"></core-ajax>
+    <template if="{{$.ajax.loading}}">
+      <paper-spinner active></paper-spinner>
+    </template>
     <a id="embed" href="{{embed.url}}" target="_blank" title="{{embed.title || embed.description || embed.url}}">
       <template if="{{embed.type === 'video' || embed.type === 'rich'}}">
         <embedly-html html="{{embed.html}}"></embedly-html>
