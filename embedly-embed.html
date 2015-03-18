@@ -6,7 +6,6 @@ A Polymer custom element that utilizes the Embedly API to embed content.
 @homepage https://github.com/miztroh/embedly-embed
 -->
 <link rel="import" href="/bower_components/core-ajax/core-ajax.html">
-<link rel="import" href="/bower_components/core-image/core-image.html">
 <polymer-element name="embedly-embed">
   <template>
     <style>
@@ -15,41 +14,43 @@ A Polymer custom element that utilizes the Embedly API to embed content.
       }
 
       :host #embed {
-        display: inline-block;
+        display: block;
       }
     </style>
     <core-ajax id="ajax" url="//api.embed.ly/1/oembed" handleAs="json" params='{"key":"{{key}}","url":"{{url}}"}' auto on-core-response="{{ajaxResponse}}"></core-ajax>
-    <div id="embed"></div>
+    <a id="embed" href="{{embed.url}}" target="_blank" title="{{embed.title || embed.description || embed.url}}">
+      <template if="{{embed.type === 'video' || embed.type === 'rich'}}">
+        <embedly-html html="{{embed.html}}"></embedly-html>
+      </template>
+      <template if="{{embed.type === 'photo'}}">
+        <img src="{{embed.url}}"></img>
+      </template>
+      <template if="{{embed.type === 'link'}}">
+        <template if="{{embed.thumbnail_url}}">
+          <img src="{{embed.thumbnail_url}}"></img>
+        </template>
+        <template if="{{!embed.thumbnail_url}}">
+          <span>{{embed.title || embed.description || embed.url}}</span>
+        </template>
+      </template>
+    </a>
   </template>
   <script>
     Polymer(
       {
         ajaxResponse: function (event, detail, sender) {
-          var embed = detail.response;
-          this.$.embed.innerHTML = '';
-
-          switch (embed.type) {
-            case 'video':
-            case 'rich':
-              this.$.embed.innerHTML = embed.html;
-              break;
-            case 'photo':
-              var core_image = document.createElement('core-image');
-              this.$.embed.appendChild(core_image);
-              core_image.src = embed.url;
-              break;
-            case 'link':
-              var a = document.createElement('a');
-              a.href = embed.url;
-              a.textContent = embed.title || embed.description || embed.url;
-              this.$.embed.appendChild(a);
-              break;
-            case 'error':
-              console.error('embedly-embed', {url: embed.url, error_message: embed.error_message, error_code: embed.error_code});
-              break;
-          }
+          this.embed = detail.response;
+          if (this.embed.type === 'error') console.error('embedly-embed', {url: this.embed.url, error_message: this.embed.error_message, error_code: this.embed.error_code});
         },
         publish: {
+  				/**
+          * Embedly embed response.
+          *
+          * @property embed
+          * @type Object
+          * @default {}
+          */
+          embed: {},
   				/**
           * Embedly API key.
           *
@@ -76,4 +77,30 @@ A Polymer custom element that utilizes the Embedly API to embed content.
       }
     );
   </script>
-</polymer-element>f
+</polymer-element>
+<polymer-element name="embedly-html">
+  <template>
+  	<style>
+  	  :host {
+      	display: block;
+      }
+
+      :host ::content iframe {
+        display: block;
+      }
+    </style>
+  	<content></content>
+  </template>
+	<script>
+    Polymer(
+      {
+        htmlChanged: function () {
+          this.innerHTML = this.html;
+        },
+        publish: {
+          html: ''
+        }
+      }
+    );
+	</script>
+</polymer-element>
