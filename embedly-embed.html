@@ -16,6 +16,10 @@ A Polymer custom element that utilizes the Embedly API to embed content.
       :host #embed {
         display: block;
       }
+
+      :host #embed img {
+        display: block;
+      }
     </style>
     <core-ajax id="ajax" url="//api.embed.ly/1/oembed" handleAs="json" params='{"key":"{{key}}","url":"{{url}}"}' auto on-core-response="{{ajaxResponse}}"></core-ajax>
     <a id="embed" href="{{embed.url}}" target="_blank" title="{{embed.title || embed.description || embed.url}}">
